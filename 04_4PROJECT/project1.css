@@ -1,0 +1,58 @@
+body{
+    color: black;
+}
+
+
+#h1{
+    text-align: center;
+    font-size: 3rem;
+    text-wrap: wrap;
+    text-transform: capitalize;
+}
+h1{
+    text-align: center;
+    text-wrap: wrap;
+}
+
+.main-box{
+    display: flex;
+    flex-wrap: wrap;
+    /* height: 1000px;
+    width: 100%; */
+    justify-content: center;
+    align-items: center;
+}
+.box{
+    
+    background-color:white;
+    height: 100px;
+    width: 100px;
+    margin: 10px;
+    padding: 5px ;
+    border: 5px solid rgb(207, 132, 211);
+    
+}
+
+#red{
+    background-color: red;
+}
+#green{
+    background-color: green;
+}
+#blue{
+    background-color: blue;
+}
+#yellow{
+    background-color: yellow;
+}
+#purple{
+    background-color: purple;
+}
+#white{
+    background-color: white;
+
+}
+
+#black{
+    background-color: black;
+}

@@ -1,0 +1,115 @@
+<!-- lexical Scpoing And Closer -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Closure aur chai</title>
+  </head>
+  <body style="background-color: #313131">
+    <button id="orange">Orange</button>
+    <button id="green">Green</button>
+  </body>
+
+  <script>
+    // ********** LEXICAL SCOPING ***********
+    // ***********************
+
+    // In lexical scope, an inner function can access variables and function of its outer functions because the scope is decided at the time of writing (lexical = related to text/code), not during execution.
+    // child element can acess parent or above(outer ) function scope it is called laxical Scoping
+    // not share in siblings; father can't acess Scope of child
+
+    // function init() {
+    //     let name = "Mozilla";
+    //     function displayName() {
+    //         console.log(name);
+    //     }
+    //     displayName();
+    // }
+    // init();
+
+    function outer() {
+      let username = "hitesh";
+      // console.log("OUTER", secret);
+      function inner() {
+        let secret = "my123";
+        console.log("inner", username);
+      }
+      function innerTwo() {
+        console.log("innerTwo", username);
+        // console.log(secret);
+      }
+      inner();
+      innerTwo();
+    }
+    outer();
+    console.log("TOO OUTER", username);
+
+    // ********** CLOSER *****************
+    // A closure is created when a function remembers and can access variables from its outer scope, even after that outer function has finished executing.
+    // “A function + the environment (scope) it was created in = closure.”
+    function makeFunc() {
+      const name = "Mozilla";
+      function displayName() {
+        console.log(name);
+      }
+      return displayName;
+
+      // We return the inner function, not executing it yet.
+      // Normally, when a function finishes execution, its local scope is removed from memory.
+      // But here, the returned `displayName` function keeps a reference to `name`
+      // due to *closure*. This means the variables from `makeFunc()`'s scope
+      // stay alive as long as `displayName` exists.
+
+      // here it return but after execution lexcical scoping also removed from execution completed (of parent fun) stack
+      // so in this case when we return a scope of parent function it return by child but this time parent has completed execution so , there the return passes the display function also 'IT'S LAXICAL SCOPING' thats why the myFunc() is getting acess to the  the makeFunc()'s attribute or property (name ="Mozilla");
+    }
+
+    // `myFunc` now holds the inner function `displayName` returned by `makeFunc`.
+    const myFunc = makeFunc(); // herec
+    // Even though `makeFunc()` has finished executing,
+    // `myFunc` still has access to the `name` variable from `makeFunc()`'s scope
+    // because of lexical scoping + closures.
+    myFunc();
+  </script>
+  <script>
+    // ***** PRACTICAL EXAMPLE OF CLOSURES + LEXICAL SCOPING *******
+
+    // Without closures, you would have to write repetitive code like:
+    // document.getElementById("orange").onclick = function() {
+    //     document.body.style.backgroundColor = `orange`;
+    // }
+    // document.getElementById("green").onclick = function() {
+    //     document.body.style.backgroundColor = `green`;
+    // }
+    // This becomes inefficient if we have 1000 buttons.
+
+    // Instead, we use a higher-order function (a function returning another function)
+    // to create reusable logic.
+    function clickHandler(color) {
+      // The returned function is the actual event handler.
+      // Even after `clickHandler` finishes execution, the inner function
+      // still has access to the `color` variable from its outer scope.
+      // This happens because of **closure**: the inner function "closes over"
+      // the variables of its lexical environment.
+      return function () {
+        // When the event triggers, this function runs and uses `color`
+        // that was remembered at the time `clickHandler` was called.
+        document.body.style.backgroundColor = `${color}`;
+      };
+    }
+
+    // Here, `clickHandler("orange")` returns a function that remembers
+    // `color = "orange"`, and assigns it to the `onclick` property.
+    document.getElementById("orange").onclick = clickHandler("orange");
+
+    // Similarly, this call returns a function that remembers `color = "green"`.
+    document.getElementById("green").onclick = clickHandler("green");
+
+    // Under the hood:
+    // 1. `clickHandler("orange")` is called → creates a closure with `color = "orange"`.
+    // 2. That closure is assigned to the button's `onclick` property.
+    // 3. Later, when you click the button, the stored function runs and still has
+    //    access to the original `color` value, even though `clickHandler` is no longer running.
+  </script>
+</html>

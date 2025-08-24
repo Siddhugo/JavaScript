@@ -1,0 +1,62 @@
+<!-- =================== DOM Creation Example =================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Example</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 1️⃣ Create a new <div> element (not yet in DOM)
+    const myDiv = document.createElement('div');
+    console.log(myDiv);  // <div></div> → element created but not visible
+
+    // 2️⃣ Add class & id
+    myDiv.className = "main"; 
+    myDiv.id = Math.floor(Math.random() * 10 + 1); // Random id (1–10)
+
+    // 3️⃣ Add attribute (generic way)
+    myDiv.setAttribute("title", "generate-title");  
+    // 👍 Tip: setAttribute is more flexible (works for any attribute)
+
+    // 4️⃣ Style dynamically
+    myDiv.style.backgroundColor = "green";
+    myDiv.style.color = "white";
+    myDiv.style.padding = "10px";
+    // ⚠️ Inline styling → not recommended for large apps (better: CSS classes)
+
+    // 5️⃣ Add content
+    // innerText → adds plain text (HTML tags are treated as text)
+    myDiv.innerText = "<h1>Hi, I created this H1 inside div</h1>";
+
+    // innerHTML → adds HTML content (renders tags)
+    // myDiv.innerHTML = "<h1>Hi, I created this H1 inside div</h1>";
+
+    // createTextNode → safest way to add plain text
+    const addText = document.createTextNode("This is added using createTextNode()");
+    // myDiv.appendChild(addText);
+
+    // 6️⃣ Append element into DOM
+    document.body.appendChild(myDiv);
+
+    /* ================= Interview Notes =================
+    ✅ createElement() → only creates, not visible until appended.
+    ✅ appendChild() → used to insert into DOM.
+    ✅ innerText → returns/sets only visible text (ignores hidden CSS).
+    ✅ textContent → returns/sets ALL text (ignores CSS styles, faster).
+    ✅ innerHTML → parses HTML, but ⚠️ unsafe with user input (XSS risk).
+    ✅ setAttribute vs direct assignment:
+       - el.setAttribute("id","test") ✅
+       - el.id = "test" ✅ (shorter, but only works for some attributes)
+    ✅ createTextNode() → prevents XSS, ensures pure text.
+    */
+
+    // ⚠️ Security Example (XSS Risk):
+    const userInput = '<img src=x onerror=alert("Hacked!")>';
+    // document.body.innerHTML = userInput; // BAD ❌ (executes script!)
+    // Instead: use createTextNode or sanitize input.
+</script>
+</html>

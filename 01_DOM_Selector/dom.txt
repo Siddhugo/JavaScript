@@ -1,0 +1,50 @@
+ in consol 
+ document.getElementById("titel")
+<h1 class="heading" id="titel">Dom Learning on Chai or code </h1>
+document.getElementById("titel").id /document.getElementById("titel").getAttribute('id')
+=>'titel'
+document.getElementById("titel").class or 
+=>undefined
+document.getElementById("titel").className or
+=>'heading'
+document.getElementById("titel").setAttribute('class',"test")
+=>undefined (give undefined but override the class name) class="test"
+
+
+
++++difference between : titel.innerText titel.innerHTML titel.textContent +++
+<h1 class="heading" id="titel" > Dom Learning on Chai or code <span style="display: none;">test text</span></h1>
+
+titel.innerText
+'Dom Learning on Chai or code'
+titel.innerHTML
+' Dom Learning on Chai or code <span style="display: none;">test text</span>'
+titel.textContent
+' Dom Learning on Chai or code test text'
+
+document.querySelector("h2")//it gives *+"first one"+* (querySelectorAll gives every quary)
+<h2>​Lorem, ipsum dolor.​</h2>​
+
+document.querySelector("titel")//=>null
+document.querySelector("#titel") :- <h1 class=​"heading" id=​"titel">​…​</h1>​
+
+document.querySelector(".heading") :- <h1 class=​"heading" id=​"titel">​…​</h1>​
+
+document.querySelector('p:first-child') :- null
+document.querySelector('input[type="password"]') :- null
+
+const myuli=document.querySelector('ul')
+const turnedgreen =myuli.querySelector('li')
+turnedgreen.style.bagroundColor ="green"
+
+
+querySelector it gives only one(the first) value to get all values
+const tempLiList=document.querySelectorAll('li')// it return nodelist (not pure array)
+tempLiList.style.cloor ='green' // give error (see in array map should avilable)
+tempLiList[0].style.cloor ='green'
+if there is one element then also you have to mention [0] index ,other wise you get error
+
+//loop in nodelist
+tempLiList.forEach(function(i){
+   i.style.bagroundColor ='green'
+})

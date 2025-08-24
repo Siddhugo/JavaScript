@@ -1,0 +1,79 @@
+<!-- =================== DOM Traversal Example =================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Traversal Example</title>
+</head>
+<body>
+    <div class="parent">
+        <div class="day">Monday</div>
+        <div class="day">Tuesday</div>
+        <div class="day">Wednesday</div>
+        <div class="day">Thursday</div>
+    </div>
+</body>
+<script>
+    // Select parent only once → better performance
+    const parent = document.querySelector('.parent');  
+
+    // =================== Children vs Nodes ===================
+    console.log(parent.children);   // HTMLCollection → elements only (live collection)
+    console.log(parent.childNodes); // NodeList → includes text nodes (spaces, newlines), comments, elements
+
+    console.log(parent.children[0].innerHTML); // Get content of first child element
+    console.log(parent.firstElementChild);     // First child element (Monday)
+    console.log(parent.lastElementChild);      // Last child element (Thursday)
+
+    // =================== Traversing DOM ===================
+    const dayOne = document.querySelector('.day');
+    console.log(dayOne.parentElement);       // Parent of 'Monday' → div.parent
+    console.log(dayOne.nextElementSibling);  // Next sibling element → Tuesday
+
+    console.log("All nodes including text nodes:", parent.childNodes); 
+    // ⚠️ Each space/newline = a text node
+    // Comments are also counted inside childNodes
+
+    // =================== Styling Example ===================
+    // parent.children[1].style.color = "orange"; // Styles 'Tuesday'
+
+    // =================== Interview Tips ===================
+    // - childNodes vs children → difference in elements vs text nodes
+    // - parentElement vs parentNode → parentNode may return non-element nodes too
+    // - nextSibling / previousSibling → include text nodes, use cautiously
+    // - HTMLCollection vs NodeList:
+    //     * HTMLCollection is LIVE (updates if DOM changes)
+    //     * NodeList is STATIC (snapshot, doesn’t auto-update)
+
+    /* Summary Table:
+
+    | Property              | Elements Only | Includes Text/Comments |
+    | --------------------- | ------------- | ---------------------- |
+    | childNodes            | ✅ Yes        | ✅ Yes                 |
+    | children              | ✅ Yes        | ❌ No                  |
+    | firstElementChild     | ✅ Yes        | ❌ No                  |
+    | firstChild            | ✅ Yes        | ✅ Yes                 |
+    | nextElementSibling    | ✅ Yes        | ❌ No                  |
+    | nextSibling           | ✅ Yes        | ✅ Yes                 |
+    */
+
+</script>
+</html>
+<!-- ✅ Interview Checklist (DOM Creation)
+
+createElement, createTextNode, appendChild, append
+
+setAttribute vs direct property assignment
+
+innerText vs textContent vs innerHTML
+
+removeChild vs remove
+
+replaceChild
+
+cloneNode
+
+classList vs className
+
+DocumentFragment (performance optimization) -->

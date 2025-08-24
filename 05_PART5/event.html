@@ -1,0 +1,97 @@
+<!-- =================== JavaScript Events Example =================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Demo</title>
+    <style>
+        img {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Event Handling Demo</h2>
+    <ul id="images">
+        <li><img id="img1" src="image.png" alt=""></li>
+        <li><img id="img2" src="image1.png" alt=""></li>
+        <li><img id="img3" src="image2.png" alt=""></li>
+        <!-- Inline event handler ❌ (not recommended)
+        <li><img id="img3" src="image2.png" alt="" onclick="alert('clicked img3')"></li> 
+        -->
+        <li><img id="img4" src="image3.png" alt=""></li>
+        <li><img id="img5" src="image3.png" alt=""></li>
+        <li><a id="google" href="https://google.com">Google</a></li>
+    </ul>
+</body>
+<script>
+    // =================== Event Handling ===================
+
+    // ❌ Old way: limited features
+    // document.getElementById('img3').onclick = function() {
+    //     alert('clicked img3');
+    // }
+
+    // ✅ Modern way: addEventListener (recommended)
+    // document.getElementById('img3').addEventListener('click', function(e) {
+    //     alert("clicked img3");
+    // }, false);  // 3rd param = useCapture (false = bubbling, true = capturing)
+
+    // =================== Event Object ===================
+    // 'e' gives details like type, target, timestamp, mouse coords, etc.
+    // Example properties:
+    // type, timeStamp, defaultPrevented, target, currentTarget,
+    // clientX/clientY, screenX/screenY, altKey, ctrlKey, shiftKey, keyCode
+
+    // =================== Event Propagation ===================
+    // Bubbling (default): child → parent (false)
+    // Capturing: parent → child (true)
+
+    // Example: bubbling & stopPropagation
+    // document.getElementById('images').addEventListener('click', function(e) {
+    //     console.log("Clicked inside <ul>");
+    // }, false);
+
+    // document.getElementById('img3').addEventListener('click', function(e) {
+    //     console.log("Clicked img3");
+    //     e.stopPropagation();  // stops bubbling up
+    // }, false);
+
+    // =================== Prevent Default ===================
+    document.getElementById('google').addEventListener('click', function(e) {
+        e.preventDefault();   // stop default action (navigating to Google)
+        console.log("Clicked Google link");
+        e.stopPropagation();  // also stop bubbling (optional)
+    });
+
+    // =================== Event Delegation ===================
+    // Attach listener to parent (<ul>) and handle children dynamically
+    document.querySelector('#images').addEventListener('click', function(e) {
+        console.log("Target:", e.target);   // actual element clicked
+        console.log("Tag:", e.target.tagName);
+
+        // Delete clicked image only (not whole UL or link)
+        if (e.target.tagName === 'IMG') {
+            e.target.parentNode.remove();  // remove <li> that wraps the image
+        }
+    }, false);
+
+    // =================== Interview Reference ===================
+    /*
+    Common Event Categories:
+    - Mouse    → click, dblclick, mousedown, mouseup, mouseenter, mouseleave, mousemove, contextmenu
+    - Keyboard → keydown, keyup, keypress
+    - Form     → submit, input, change, focus, blur
+    - Window   → load, resize, scroll, unload
+
+    Key Concepts:
+    - Inline handlers (onclick) ❌ outdated
+    - addEventListener ✅ best practice
+    - Bubbling vs Capturing
+    - stopPropagation() to stop event bubbling/capturing
+    - preventDefault() to block default browser actions
+    - Event Delegation (listen on parent, act on child via e.target)
+    */
+</script>
+</html>

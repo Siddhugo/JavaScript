@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blocking vs Non-Blocking</title>
+</head>
+<body>
+  <h2>Open Console to See Output</h2>
+</body>
+<script>
+  // ==================== JavaScript Execution Model ====================
+  // ✅ JavaScript is:
+  // - "Synchronous" → executes one line at a time, in order.
+  // - "Single-threaded" → only one call stack (one task at a time).
+  //
+  // But browsers/Node.js provide extra features (Web APIs, Event Loop, Callback Queue),
+  // so we can perform async (non-blocking) tasks like setTimeout, AJAX, Promises, etc.
+  // ====================================================================
+
+
+  // ==================== Blocking Example ====================
+  // ❌ Problem: Blocks the main thread → nothing else can run in parallel.
+  function blockingTask() {
+    console.log("Blocking task started");
+
+    let sum = 0;
+    // A heavy calculation (takes noticeable time)
+    for (let i = 0; i < 1e9; i++) {
+      sum += i;
+    }
+
+    console.log("Blocking task done, sum =", sum);
+  }
+
+  console.log("1: Start");
+  blockingTask();  // Uncomment this line to see the page freeze temporarily
+  console.log("2: After blockingTask");
+
+
+  // ==================== Non-Blocking Example ====================
+  // ✅ Solution: Delegates work to browser API (setTimeout),
+  // JS continues running without waiting.
+  // console.log("3: Before setTimeout");
+
+  // setTimeout(() => {
+  //   console.log("4: Timeout callback (async task)");
+  // }, 2000); // callback scheduled after 2s
+
+  // console.log("5: After setTimeout");
+
+
+  // ==================== Another Async Example ====================
+  // Shows how code continues immediately, while async task is delayed.
+  console.log("6: Start async task");
+  setTimeout(() => {
+    console.log("7: Async task finished (after 2s)");
+  }, 2000);
+  console.log("8: Code continues immediately");
+
+
+  // ==================== Expected Order of Output ====================
+  // --- If blockingTask() is commented out ---
+  // 1: Start
+  // 2: After blockingTask
+  // 3: Before setTimeout
+  // 5: After setTimeout
+  // 6: Start async task
+  // 8: Code continues immediately
+  // 4: Timeout callback (async task)
+  // 7: Async task finished (after 2s)
+  //
+  // --- If blockingTask() is uncommented ---
+  // 1: Start
+  // (UI freezes here until blockingTask finishes)
+  // "Blocking task started"
+  // "Blocking task done, sum = ..."
+  // 2: After blockingTask
+  // ...then the rest (same as above)
+</script>
+</html>

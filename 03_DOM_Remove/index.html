@@ -1,0 +1,78 @@
+<!-- =================== Edit and Remove DOM Elements =================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Edit/Remove Example</title>
+</head>
+<body>
+    <ul class="language">
+        <li>JavaScript</li>
+    </ul>
+</body>
+<script>
+    // =================== Add New Elements ===================
+    // Approach 1: Using innerHTML (⚠️ not safe for user input, can inject HTML)
+    function addLanguage(langName) {
+        const li = document.createElement("li");
+        li.innerHTML = `${langName}`;
+        document.querySelector('.language').appendChild(li);
+    }
+    addLanguage("Python");
+    addLanguage("Java");
+
+    // Approach 2 (Optimized): Using createTextNode (safer + faster)
+    function addLanguageOptimise(langName) {
+        const li = document.createElement("li");
+        li.appendChild(document.createTextNode(langName));
+        document.querySelector('.language').appendChild(li);
+    }
+    addLanguageOptimise("C++");
+    addLanguageOptimise("C");
+
+    // =================== Edit Existing Elements ===================
+    // Replace 2nd <li> with a new <li>
+    const secondLang = document.querySelector("li:nth-child(2)");
+    const newLi = document.createElement("li");
+    newLi.textContent = "Mojo";
+    secondLang.replaceWith(newLi); 
+
+    // Replace 1st <li> entirely with <h1>
+    const firstLang = document.querySelector("li:first-child");
+    firstLang.outerHTML = '<h1>Hi, I changed this</h1>';
+
+    // =================== Insert Elements at Specific Position ===================
+    const ul = document.querySelector(".language");
+    const insertLi = document.createElement("li");
+    insertLi.textContent = "Inserted Before First";
+    ul.insertBefore(insertLi, ul.firstElementChild); // insert at beginning
+
+    // =================== Replace Child (classic way) ===================
+    const replaceNode = document.createElement("li");
+    replaceNode.textContent = "Rust";
+    ul.replaceChild(replaceNode, ul.children[1]); // replaces 2nd element
+
+    // =================== Remove Elements ===================
+    // Modern way (ES6+)
+    const lastLang = document.querySelector("li:last-child");
+    lastLang.remove(); 
+
+    // Older way (for legacy browsers)
+    // lastLang.parentNode.removeChild(lastLang);
+
+    // =================== Tips for Interviews ===================
+    /*
+    - appendChild → Always appends at the end.
+    - innerHTML vs textContent:
+        innerHTML → parses HTML (unsafe for user input)
+        textContent → inserts plain text only (safer, faster)
+    - replaceWith() → replaces element directly.
+    - outerHTML → replaces the element including itself.
+    - insertBefore() → inserts before a specific node.
+    - replaceChild() → classic way to replace child elements.
+    - remove() → modern way to delete (not supported in very old browsers).
+    - removeChild() → older method, works everywhere.
+    */
+</script>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>setInterval & clearInterval</title>
+</head>
+<body>
+  <h1>chai or js</h1>
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
+</body>
+<script>
+  // ==================== setInterval ====================
+  // setInterval schedules a function to run repeatedly
+  // after a fixed delay (in ms), until stopped.
+
+  let intervalId; // store ID globally for start/stop control
+
+  const sayDate = function (str) {
+    console.log(str, Date.now()); // log message + timestamp
+  };
+
+  // ==================== Start Interval ====================
+  document.querySelector('#start').addEventListener('click', function () {
+    if (!intervalId) { // prevent multiple intervals stacking
+      intervalId = setInterval(sayDate, 1000, 'Siddhu says hi →');
+      console.log("Interval Started");
+    }
+  });
+
+  // ==================== Stop Interval ====================
+  document.querySelector('#stop').addEventListener('click', function () {
+    clearInterval(intervalId); // stops repeated execution
+    intervalId = null; // reset ID for reuse
+    console.log("Interval Stopped");
+  });
+
+  // ✅ Notes for Interviews:
+  // - setInterval returns an ID → must save it to stop later.
+  // - clearInterval cancels the scheduled interval.
+  // - Common pitfall: starting multiple intervals without stopping → leads to duplicate executions.
+  // - Alternative: setTimeout (recursive) is often preferred for dynamic intervals.
+</script>
+</html>

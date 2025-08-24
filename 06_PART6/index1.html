@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>setTimeout & clearTimeout</title>
+</head>
+<body>
+  <h1>siddhu or code</h1>
+  <button id="stop">Stop</button>
+</body>
+<script>
+  // ==================== setTimeout ====================
+  // setTimeout schedules a function to run once after a delay (in ms).
+  // It does NOT block code execution.
+
+  // Function to log text
+  const saySiddhu = function () {
+    console.log("siddhu");
+  };
+
+  // Function to change the heading text
+  const changeText = function () {
+    document.querySelector('h1').innerHTML = 'best js series';
+  };
+
+  // Schedule both functions after 2 seconds
+  const changeMe = setTimeout(changeText, 2000); // returns a timeout ID
+  setTimeout(saySiddhu, 2000);
+
+  // ==================== clearTimeout ====================
+  // clearTimeout cancels a scheduled timeout BEFORE it executes.
+  // Common use: cancel timeout on some event (like a button click).
+  document.querySelector('#stop').addEventListener('click', function () {
+    clearTimeout(changeMe); // cancels "changeText"
+    console.log('Stopped before change');
+  });
+
+  // ✅ Notes for Interviews:
+  // - setTimeout returns an ID → use it to clear.
+  // - Multiple timeouts can run independently.
+  // - clearTimeout only works if called BEFORE the callback executes.
+  // - In async interview questions, remember:
+  //     console.log(1)
+  //     setTimeout(..., 0)
+  //     console.log(2)
+  //   → Output = 1,2,(timeout callback), because of Event Loop.
+</script>
+</html>

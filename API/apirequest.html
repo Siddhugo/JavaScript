@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quos, consectetur.</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, tenetur!</p>
+</body>
+<script>
+    // it is a class or method
+   const xhr =new XMLHttpRequest();
+//    https://api.github.com/users/siddhugo
+const requestUrl ='https://api.github.com/users/siddhugo';
+//    xhr.open('GET','https://api.github.com/users/siddhugo') //or
+    xhr.open('GET',requestUrl);
+
+
+    // continuously monitor ready state
+    xhr.onreadystatechange = function(){
+    console.log(xhr.readyState);
+    if(xhr.readyState   === 4 ){
+        console.log(this.responseText)
+    //    const data =this.responseText
+        // console.log(data.following);//gives undefined
+        // console.log(typeof data);//=>string  // because data is string
+        // maximum time api data come in form of string
+        // now convert string to object(NO) it look like object but it is jason data not object
+        // parse is a method which convert string to jason
+        const data = JSON.parse(this.responseText);
+            console.log(data)
+        console.log(typeof data);//=>boject but it is jason
+         console.log(data.following);//noe it works
+    }
+    }
+    console.log('here');
+    console.log(xhr.readyState);
+    
+    xhr.send()
+</script>
+</html>
+<!-- i nitially or p to 3 years ago(coming of fetch request) we do request using XMLHttpRequest-->
+ <!-- Value	State	Description
+0	UNSENT	Client has been created. open() not called yet.
+1	OPENED	open() has been called.
+2	HEADERS_RECEIVED	send() has been called, and headers and status are available.
+3	LOADING	Downloading; responseText holds partial data.
+4	DONE	The operation is complete. -->
+
+
+<!-- ********************** console.log() *************************** -->
+console.log()
