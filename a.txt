@@ -1,0 +1,330 @@
+
+
+def quick_sort(arr, low=0, high=None):
+    if high is None:
+        high = len(arr) - 1
+
+    def partition(a, lo, hi):
+        pivot = a[hi]                # choose last element as pivot
+        i = lo - 1
+        for j in range(lo, hi):    
+            if a[j] <= pivot:
+                i += 1
+                a[i], a[j] = a[j], a[i]
+        a[i+1], a[hi] = a[hi], a[i+1]
+        return i + 1
+
+    if low < high:
+        p = partition(arr, low, high)
+        quick_sort(arr, low, p-1)
+        quick_sort(arr, p+1, high)
+
+# Example:
+lst = [33, 10, 55, 71, 29, 3]
+quick_sort(lst)
+print("Quick Sorted:", lst)
+----------------------------------------------------
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr)//2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+
+    # merge two sorted lists
+    i = j = 0
+    merged = []
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            merged.append(left[i]); i += 1
+        else:
+            merged.append(right[j]); j += 1
+    merged.extend(left[i:])
+    merged.extend(right[j:])
+    return merged
+
+# Example:
+lst = [33, 10, 55, 71, 29, 3]
+print("Merge Sorted:", merge_sort(lst))
+
+from collections import deque, defaultdict
+
+def topological_sort(edges, num_vertices):
+    # edges: list of (u, v) directed edges u->v
+    indeg = [0]*num_vertices
+    adj = defaultdict(list)
+    for u, v in edges:
+        adj[u].append(v)
+        indeg[v] += 1
+
+    q = deque([i for i in range(num_vertices) if indeg[i] == 0])
+    topo = []
+    while q:
+        u = q.popleft()
+        topo.append(u)
+        for v in adj[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+
+    if len(topo) != num_vertices:
+        raise ValueError("Graph has a cycle; topological ordering not possible.")
+    return topo
+
+# Example:
+edges = [(5,2),(5,0),(4,0),(4,1),(2,3),(3,1)]
+print("Topological order:", topological_sort(edges, 6))
+----------------------------------------------------------------
+import heapq
+
+def dijkstra(adj, src):
+    # adj is a dict: node -> list of (neighbor, weight)
+    dist = {node: float('inf') for node in adj}
+    dist[src] = 0
+    parent = {node: None for node in adj}
+    pq = [(0, src)]
+
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d > dist[u]:
+            continue
+        for v, w in adj[u]:
+            nd = d + w
+            if nd < dist[v]:
+                dist[v] = nd
+                parent[v] = u
+                heapq.heappush(pq, (nd, v))
+    return dist, parent
+
+# Example:
+adj = {
+    'A': [('B', 1), ('C', 4)],
+    'B': [('C', 2), ('D', 5)],
+    'C': [('D', 1)],
+    'D': []
+}
+dist, parent = dijkstra(adj, 'A')
+print("Distances:", dist)
+print("Parents:", parent)
+---------------------------------------------------
+def knapsack_01(weights, values, W):
+    # weights, values: lists of same length; W: capacity
+    n = len(weights)
+    dp = [[0]*(W+1) for _ in range(n+1)]
+
+    for i in range(1, n+1):
+        wt = weights[i-1]
+        val = values[i-1]
+        for w in range(W+1):
+            if wt <= w:
+                dp[i][w] = max(dp[i-1][w], dp[i-1][w-wt] + val)
+            else:
+                dp[i][w] = dp[i-1][w]
+
+    # reconstruct chosen items (optional)
+    res = dp[n][W]
+    chosen = []
+    w = W
+    for i in range(n, 0, -1):
+        if dp[i][w] != dp[i-1][w]:
+            chosen.append(i-1)
+            w -= weights[i-1]
+    chosen.reverse()
+    return res, chosen
+
+# Example:
+vals = [60, 100, 120]
+wts = [10, 20, 30]
+capacity = 50
+print("Max value, items:", knapsack_01(wts, vals, capacity))
+-----------------------------------------------------------------------
+def kruskal(nodes, edges):
+    # nodes: iterable of nodes
+    # edges: list of (weight, u, v)
+    parent = {}
+    rank = {}
+
+    def make_set(x):
+        parent[x] = x; rank[x] = 0
+
+    def find(x):
+        if parent[x] != x:
+            parent[x] = find(parent[x])
+        return parent[x]
+
+    def union(x, y):
+        rx, ry = find(x), find(y)
+        if rx == ry: return False
+        if rank[rx] < rank[ry]:
+            parent[rx] = ry
+        else:
+            parent[ry] = rx
+            if rank[rx] == rank[ry]:
+                rank[rx] += 1
+        return True
+
+    for n in nodes:
+        make_set(n)
+    mst = []
+    edges_sorted = sorted(edges)
+    for w, u, v in edges_sorted:
+        if union(u, v):
+            mst.append((u, v, w))
+    return mst
+
+# Example:
+nodes = [0,1,2,3]
+edges = [(1,0,1),(3,0,2),(4,0,3),(2,1,2),(5,2,3)]
+print("Kruskal MST:", kruskal(nodes, edges))
+--------------------------------------------------------------------
+import heapq
+
+def prim(adj, start):
+    # adj: node -> list of (neighbor, weight)
+    visited = set()
+    pq = []
+    mst = []
+    def add_edges(u):
+        visited.add(u)
+        for v, w in adj[u]:
+            if v not in visited:
+                heapq.heappush(pq, (w, u, v))
+
+    add_edges(start)
+    while pq:
+        w, u, v = heapq.heappop(pq)
+        if v in visited:
+            continue
+        mst.append((u, v, w))
+        add_edges(v)
+    return mst
+
+# Example:
+adj = {
+    0: [(1,1),(2,3)],
+    1: [(0,1),(2,2),(3,4)],
+    2: [(0,3),(1,2),(3,5)],
+    3: [(1,4),(2,5)]
+}
+print("Prim MST:", prim(adj, 0))
+-------------------------------------------------
+def warshall_transitive_closure(adj_matrix):
+    # adj_matrix: n x n list of 0/1 (1 means edge i->j)
+    n = len(adj_matrix)
+    reach = [row[:] for row in adj_matrix]  # copy
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                reach[i][j] = reach[i][j] or (reach[i][k] and reach[k][j])
+    return reach
+
+# Example:
+mat = [
+    [1,1,0],
+    [0,1,1],
+    [0,0,1]
+]
+print("Transitive closure:", warshall_transitive_closure(mat))
+------------------------------------------------
+def floyd_warshall(dist):
+    # dist: n x n matrix with distances (use float('inf') for no edge)
+    n = len(dist)
+    d = [row[:] for row in dist]
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if d[i][k] + d[k][j] < d[i][j]:
+                    d[i][j] = d[i][k] + d[k][j]
+    return d
+
+# Example:
+INF = float('inf')
+dist = [
+    [0, 3, INF, 7],
+    [8, 0, 2, INF],
+    [5, INF, 0, 1],
+    [2, INF, INF, 0]
+]
+print("All-pairs shortest paths:", floyd_warshall(dist))
+-----------------------------------------------
+from collections import deque
+
+def bfs_reachable(adj, start):
+    # adj: node -> list of neighbors
+    visited = set([start])
+    q = deque([start])
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in adj.get(u, []):
+            if v not in visited:
+                visited.add(v)
+                q.append(v)
+    return order
+
+# Example:
+adj = {0:[1,2],1:[2],2:[3],3:[]}
+print("Reachable from 0:", bfs_reachable(adj, 0))
+-----------------------------------------------------------
+DFS: Check whether a given graph (undirected) is connected
+def is_connected_undirected(adj):
+    # adj: node -> list of neighbors
+    nodes = list(adj.keys())
+    if not nodes:
+        return True
+    start = nodes[0]
+    visited = set()
+
+    def dfs(u):
+        visited.add(u)
+        for v in adj.get(u, []):
+            if v not in visited:
+                dfs(v)
+
+    dfs(start)
+    return len(visited) == len(nodes)
+
+# Example:
+adj = {0:[1], 1:[0,2], 2:[1], 3:[]}  # node 3 isolated
+print("Connected?", is_connected_undirected(adj))
+-----------------------------------------------
+def solve_n_queens(n):
+    cols = set()
+    diag1 = set()  # r - c
+    diag2 = set()  # r + c
+    board = [-1]*n  # board[r] = c
+
+    solutions = []
+
+    def backtrack(r):
+        if r == n:
+            # convert to readable board
+            sol = []
+            for i in range(n):
+                row = ['.']*n
+                row[board[i]] = 'Q'
+                sol.append(''.join(row))
+            solutions.append(sol)
+            return
+        for c in range(n):
+            if c in cols or (r-c) in diag1 or (r+c) in diag2:
+                continue
+            cols.add(c); diag1.add(r-c); diag2.add(r+c)
+            board[r] = c
+            backtrack(r+1)
+            cols.remove(c); diag1.remove(r-c); diag2.remove(r+c)
+            board[r] = -1
+
+    backtrack(0)
+    return solutions
+
+# Example (all solutions for 4-queens):
+for sol in solve_n_queens(4):
+    print("\n".join(sol))
+    print()
+
+
+
+
+
