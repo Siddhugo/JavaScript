@@ -325,6 +325,139 @@ for sol in solve_n_queens(4):
     print()
 
 
+def tower_of_hanoi(n, source, helper, destination):
+    if n == 1:
+        print(f"Move disk 1 from {source} → {destination}")
+        return
+
+    # Move (n-1) disks from source to helper
+    tower_of_hanoi(n-1, source, destination, helper)
+
+    # Move nth disk
+    print(f"Move disk {n} from {source} → {destination}")
+
+    # Move (n-1) disks from helper to destination
+    tower_of_hanoi(n-1, helper, source, destination)
+
+# Example
+tower_of_hanoi(3, "A", "B", "C")
 
 
 
+*------------------------
+def matrix_chain_multiplication(p):
+    """
+    p = array of dimensions
+    If there are n matrices, length of p = n+1
+    Example: A1 is 10x30, A2 is 30x5, A3 is 5x60 => p = [10, 30, 5, 60]
+    """
+
+    n = len(p) - 1                 # Number of matrices
+
+    # dp[i][j] will store the minimum cost to multiply matrices Ai ... Aj
+    dp = [[0 for _ in range(n)] for _ in range(n)]
+
+    # split[i][j] will store index k where optimal split occurs
+    split = [[-1 for _ in range(n)] for _ in range(n)]
+
+    # L = chain length
+    for L in range(2, n + 1):
+        for i in range(0, n - L + 1):
+            j = i + L - 1
+            dp[i][j] = float('inf')
+
+            # Try all possible positions to split the product
+            for k in range(i, j):
+                cost = dp[i][k] + dp[k+1][j] + p[i] * p[k+1] * p[j+1]
+
+                if cost < dp[i][j]:
+                    dp[i][j] = cost
+                    split[i][j] = k
+
+    return dp, split
+----------------------------------------
+def fractional_knapsack(weights, values, capacity):
+    n = len(weights)
+
+    # Calculate value/weight ratio
+    ratio = []
+    for i in range(n):
+        ratio.append((values[i] / weights[i], weights[i], values[i]))
+
+    # Sort by ratio in descending order
+    ratio.sort(reverse=True, key=lambda x: x[0])
+
+    total_value = 0.0
+    remain = capacity
+    taken = []
+
+    for r, w, v in ratio:
+        if remain == 0:
+            break
+
+        # If weight can be taken fully
+        if w <= remain:
+            total_value += v
+            remain -= w
+            taken.append((w, v))
+        else:
+            # Take fractional part
+            fraction = remain / w
+            total_value += v * fraction
+            taken.append((remain, v * fraction))
+            remain = 0
+
+    return total_value, taken
+
+
+# Example
+weights = [10, 20, 30]
+values = [60, 100, 120]
+capacity = 50
+
+value, items = fractional_knapsack(weights, values, capacity)
+
+print("Maximum Value =", value)
+print("Items Taken =", items)
+-------------------------------------
+def job_scheduling(jobs):
+    """
+    jobs = [(job_id, deadline, profit)]
+    """
+    # Sort by profit (descending)
+    jobs.sort(key=lambda x: x[2], reverse=True)
+
+    # Find max deadline
+    max_deadline = max(job[1] for job in jobs)
+
+    # Slots to store which job is taken
+    slot = [-1] * (max_deadline + 1)
+
+    total_profit = 0
+    selected = []
+
+    for job_id, deadline, profit in jobs:
+        # Find a free slot from deadline → 1
+        for t in range(deadline, 0, -1):
+            if slot[t] == -1:
+                slot[t] = job_id
+                total_profit += profit
+                selected.append(job_id)
+                break
+
+    return selected, total_profit
+
+
+# Example
+jobs = [
+    ('J1', 2, 100),
+    ('J2', 1, 19),
+    ('J3', 2, 27),
+    ('J4', 1, 25),
+    ('J5', 3, 15)
+]
+
+selected, profit = job_scheduling(jobs)
+
+print("Jobs Selected =", selected)
+print("Total Profit =", profit)
